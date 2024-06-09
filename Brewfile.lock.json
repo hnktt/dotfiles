@@ -1,0 +1,76 @@
+{
+  "entries": {
+    "cask": {
+      "font-iosevka-ss15": {
+        "version": "30.1.2",
+        "options": {
+          "full_name": "font-iosevka-ss15"
+        }
+      },
+      "font-symbols-only-nerd-font": {
+        "version": "3.2.1",
+        "options": {
+          "full_name": "font-symbols-only-nerd-font"
+        }
+      },
+      "radio-silence": {
+        "version": "3.2",
+        "options": {
+          "full_name": "radio-silence"
+        }
+      },
+      "tailscale": {
+        "version": "1.66.4",
+        "options": {
+          "full_name": "tailscale"
+        }
+      },
+      "transmission": {
+        "version": "4.0.6",
+        "options": {
+          "full_name": "transmission"
+        }
+      },
+      "iterm2@beta": {
+        "version": "3.5.1beta4",
+        "options": {
+          "full_name": "iterm2@beta"
+        }
+      }
+    },
+    "tap": {
+      "koekeishiya/formulae": {
+        "revision": "757b5c222bce502d4292dfbb9648eb749689d704"
+      },
+      "felixkratz/formulae": {
+        "revision": "135452bb73f5fee5b31ca726b9eecdedb5f6492e"
+      }
+    },
+    "brew": {
+      "koekeishiya/formulae/yabai": {
+        "version": "7.1.1",
+        "bottle": false
+      },
+      "koekeishiya/formulae/skhd": {
+        "version": "0.3.9",
+        "bottle": false
+      },
+      "felixkratz/formulae/sketchybar": {
+        "version": "2.21.0",
+        "bottle": false
+      }
+    }
+  },
+  "system": {
+    "macos": {
+      "sonoma": {
+        "HOMEBREW_VERSION": "4.3.3",
+        "HOMEBREW_PREFIX": "/opt/homebrew",
+        "Homebrew/homebrew-core": "api",
+        "CLT": "15.3.0.0.1.1708646388",
+        "Xcode": "15.4",
+        "macOS": "14.5"
+      }
+    }
+  }
+}
