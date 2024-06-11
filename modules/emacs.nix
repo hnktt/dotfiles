@@ -1,7 +1,7 @@
 { config, inputs, lib, pkgs, ... }:
 let
   inherit (lib) mkEnableOption mkIf;
-  inherit (pkgs) emacs-pgtk emacsPackagesFor fetchpatch;
+  inherit (pkgs) emacs-pgtk emacsPackagesFor fetchpatch stdenv;
 
   emacsPkg = emacs-pgtk.overrideAttrs (old: {
     patches = (old.patches or [ ])
@@ -33,7 +33,7 @@ in
     ];
 
     home.packages = [
-      ((emacsPackagesFor emacsPkg).emacsWithPackages
+      ((emacsPackagesFor (if stdenv.isLinux then emacs-pgtk else emacsPkg)).emacsWithPackages
         (epkgs: with epkgs; [
           vterm
           treesit-grammars.with-all-grammars
