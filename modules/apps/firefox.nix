@@ -3,10 +3,10 @@ let
   inherit (lib) isDarwin isLinux mkEnableOption mkIf mkMerge optionalAttrs;
   inherit (pkgs) callPackage stdenv;
 
-  cfg = config.modules.firefox;
+  cfg = config.apps.firefox;
 in
 {
-  options.modules.firefox = {
+  options.apps.firefox = {
     enable = mkEnableOption ''
       Enable firefox
     '';
@@ -55,7 +55,7 @@ in
         programs.firefox.package = callPackage ../packages/firefox.nix { };
       })
 
-      (mkIf (stdenv.isDarwin && config.modules.pass.enable) {
+      (mkIf (stdenv.isDarwin && config.apps.pass.enable) {
         home.activation = {
           browsepassFirefoxActivation = lib.hm.dag.entryAfter [ "writeBoundary" ]
             ''
@@ -67,10 +67,20 @@ in
         };
       })
 
-      (mkIf (stdenv.isLinux && config.modules.pass.enable) {
+      # TODO: move to gpg or pass module
+      (mkIf (stdenv.isLinux && config.apps.pass.enable) {
         services.gpg-agent.extraConfig = ''
           pinentry-program ${pkgs.pinentry.gnome3}/bin/pinentry-gnome3
         '';
+
+
+        programs.firefox.package = pkgs.firefox.override {
+          nativeMessagingHosts = with pkgs; [
+            gnome-browser-connector
+            browserpass
+          ];
+        };
+
       })
     ]);
 }

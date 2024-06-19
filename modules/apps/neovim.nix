@@ -2,10 +2,10 @@
 let
   inherit (lib) mkEnableOption mkIf mkMerge;
 
-  cfg = config.modules.neovim;
+  cfg = config.apps.neovim;
 in
 {
-  options.modules.neovim = {
+  options.apps.neovim = {
     enable = mkEnableOption ''
       Enable neovim
     '';

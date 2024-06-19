@@ -18,10 +18,11 @@ let
       })
     ];
   });
-  cfg = config.modules.emacs;
+
+  cfg = config.apps.emacs;
 in
 {
-  options.modules.emacs = {
+  options.apps.emacs = {
     enable = mkEnableOption ''
       	emacs
     '';

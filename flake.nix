@@ -26,110 +26,59 @@
             { inherit pkgs system; }
           )
         ));
+
+      mkHome = system: username: fn: fn
+        ({
+          inherit username system;
+
+          lib = nixpkgs.lib.extend
+            (final: prev: { }
+              // (import ./lib { lib = nixpkgs.lib; })
+              // home-manager.lib);
+
+          pkgs = nixpkgs.legacyPackages.${system};
+        });
     in
     {
-      homeConfigurations.evgeniya = home-manager.lib.homeManagerConfiguration {
-        pkgs = nixpkgs.legacyPackages."x86_64-linux";
+      homeConfigurations.evgeniya = mkHome "x86_64-linux" "pml"
+        ({ lib, pkgs, system, username, ... }: home-manager.lib.homeManagerConfiguration {
+          inherit pkgs;
 
-        extraSpecialArgs = {
-          inherit inputs;
-          system = "x86_64-linux";
-          lib = nixpkgs.lib.extend
-            (final: prev: { }
-              // (import ./stdenv.nix { })
-              // home-manager.lib);
-        };
+          extraSpecialArgs = { inherit inputs lib system; };
 
-        modules = [
-          ./modules/git.nix
-          ./modules/zsh.nix
-          ./modules/emacs.nix
-          ./modules/gpg.nix
-          ./modules/pass.nix
-          ./modules/firefox.nix
-          ./modules/neovim.nix
+          modules =
+            (lib.recursiveImports ./modules)
+            ++
+            [
+              ./machines/evgeniya.nix
+              {
+                home.username = "${username}";
+                home.homeDirectory = "/home/${username}";
 
-          ({ pkgs, ... }: {
-            programs.firefox.package = pkgs.firefox.override {
-              nativeMessagingHosts = with pkgs; [
-                gnome-browser-connector
-                browserpass
-              ];
-            };
+                programs.home-manager.enable = true;
+              }
+            ];
+        });
 
-            modules.git.enable = true;
-            modules.zsh.enable = true;
-            modules.emacs.enable = true;
-            modules.gpg.enable = true;
-            modules.pass.enable = true;
-            modules.firefox.enable = true;
-            modules.neovim.enable = true;
+      homeConfigurations.magda = mkHome "aarch64-darwin" "pml"
+        ({ lib, pkgs, system, username, ... }: home-manager.lib.homeManagerConfiguration {
+          inherit pkgs;
 
-            # programs.firefox.profiles."pml" = {
-            #   settings = {
-            #     "browser.startup.page" = 3;
-            #     "browser.formfill.enable" = false;
-            #     "browser.download.useDownloadDir" = false;
-            #     "gfx.webrender.all" = true;
-            #     "media.ffmpeg.vaapi.enabled" = true;
-            #     "media.ffvpx.enabled" = false;
-            #     "media.rdd-vpx.enabled" = false;
-            #     "media.navigator.mediadatadecoder_vpx_enabled" = true;
-            #     "services.sync.prefs.sync.browser.formfill.enable" = false;
-            #     "signon.rememberSignons" = false;
-            #     "signon.prefillForms" = false;
-            #   };
-            # };
+          extraSpecialArgs = { inherit inputs lib system; };
 
-            home.username = "pml";
-            home.homeDirectory = "/home/pml";
-            home.stateVersion = "24.05";
+          modules =
+            (lib.recursiveImports ./modules)
+            ++
+            [
+              ./machines/magda.nix
+              {
+                home.username = "${username}";
+                home.homeDirectory = "/Users/${username}";
 
-            programs.home-manager.enable = true;
-          })
-        ];
-      };
-
-      homeConfigurations.magda = home-manager.lib.homeManagerConfiguration {
-        pkgs = nixpkgs.legacyPackages."aarch64-darwin";
-
-        extraSpecialArgs = {
-          inherit inputs;
-          system = "aarch64-darwin";
-          lib = nixpkgs.lib.extend
-            (final: prev: { }
-              // (import ./stdenv.nix { })
-              // home-manager.lib);
-        };
-
-        modules = [
-          ./modules/git.nix
-          ./modules/zsh.nix
-          ./modules/emacs.nix
-          ./modules/gpg.nix
-          ./modules/pass.nix
-          ./modules/firefox.nix
-          ./modules/neovim.nix
-
-          {
-            modules.git.enable = true;
-            modules.zsh.enable = true;
-            modules.emacs.enable = true;
-            modules.gpg.enable = true;
-            modules.pass.enable = true;
-            modules.firefox.enable = true;
-            modules.neovim.enable = true;
-          }
-
-          {
-            home.username = "pml";
-            home.homeDirectory = "/Users/pml";
-            home.stateVersion = "24.05";
-
-            programs.home-manager.enable = true;
-          }
-        ];
-      };
+                programs.home-manager.enable = true;
+              }
+            ];
+        });
 
       formatter = forAllSystems ({ pkgs, ... }: pkgs.nixpkgs-fmt);
     };

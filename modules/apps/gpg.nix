@@ -3,12 +3,12 @@ let
   inherit (lib) mkEnableOption mkIf mkMerge;
   inherit (pkgs) stdenv;
 
-  cfg = config.modules.gpg;
+  cfg = config.apps.gpg;
 in
 {
-  options.modules.gpg = {
+  options.apps.gpg = {
     enable = mkEnableOption ''
-      Enable gpg
+      gpg
     '';
   };
 

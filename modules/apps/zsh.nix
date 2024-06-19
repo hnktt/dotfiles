@@ -3,12 +3,12 @@ let
   inherit (lib) mkEnableOption mkIf mkMerge;
   inherit (pkgs) stdenv;
 
-  cfg = config.modules.zsh;
+  cfg = config.apps.zsh;
 in
 {
-  options.modules.zsh = {
+  options.apps.zsh = {
     enable = mkEnableOption ''
-      Enable git
+      zsh
     '';
   };
 
