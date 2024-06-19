@@ -52,7 +52,7 @@ in
       }
 
       (mkIf (stdenv.isDarwin) {
-        programs.firefox.package = callPackage ../packages/firefox.nix { };
+        programs.firefox.package = callPackage ../../packages/firefox.nix { };
       })
 
       (mkIf (stdenv.isDarwin && config.apps.pass.enable) {

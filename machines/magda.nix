@@ -1,7 +1,7 @@
 { ... }:
 
 {
-  appearance.fonts.enable = true;
+  appearance.fonts.enable = false;
 
   apps.emacs.enable = true;
   apps.firefox.enable = true;
