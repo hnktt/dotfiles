@@ -1,4 +1,10 @@
-{ lib, stdenv, fetchurl, unzip, p7zip }:
+{
+  lib,
+  stdenv,
+  fetchurl,
+  unzip,
+  p7zip,
+}:
 
 stdenv.mkDerivation rec {
   pname = "apple-fonts";
@@ -71,4 +77,3 @@ stdenv.mkDerivation rec {
     license = lib.licenses.unfree;
   };
 }
-

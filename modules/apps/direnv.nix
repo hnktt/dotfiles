@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   inherit (lib) mkEnableOption mkIf mkMerge;
   inherit (pkgs) stdenv;
@@ -13,13 +18,11 @@ in
   };
 
   config = mkIf cfg.enable (mkMerge [
-    { 
-      programs.direnv.enable = true; 
-      programs.direnv.nix-direnv.enable = true; 
+    {
+      programs.direnv.enable = true;
+      programs.direnv.nix-direnv.enable = true;
     }
 
-    (mkIf config.programs.zsh.enable {
-       programs.direnv.enableZshIntegration = true;
-    })
+    (mkIf config.programs.zsh.enable { programs.direnv.enableZshIntegration = true; })
   ]);
 }

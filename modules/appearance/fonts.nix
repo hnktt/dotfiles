@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   inherit (lib) mkEnableOption mkIf mkMerge;
   inherit (pkgs) stdenv;
@@ -17,7 +22,7 @@ in
       fonts.fontconfig.enable = true;
       nixpkgs.config.allowUnfree = true;
 
-      home.packages = with pkgs;[
+      home.packages = with pkgs; [
         (callPackage ../../packages/apple-fonts.nix { })
 
         (iosevka.override {

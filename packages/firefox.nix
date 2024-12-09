@@ -1,10 +1,17 @@
-{ fetchurl, stdenv, undmg }:
+{
+  fetchurl,
+  stdenv,
+  undmg,
+}:
 stdenv.mkDerivation rec {
   pname = "Firefox";
   version = "126.0.1";
   buildInputs = [ undmg ];
   sourceRoot = ".";
-  phases = [ "unpackPhase" "installPhase" ];
+  phases = [
+    "unpackPhase"
+    "installPhase"
+  ];
   installPhase = ''
     mkdir -p "$out/Applications"
     cp -r Firefox.app "$out/Applications/Firefox.app"
@@ -16,5 +23,3 @@ stdenv.mkDerivation rec {
     sha256 = "eOAK82zNpmH1zhneUEtNPwmgJ+X9DKq1eAkP4cHA6pA=";
   };
 }
-
-

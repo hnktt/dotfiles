@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   inherit (lib) mkEnableOption mkIf mkMerge;
   inherit (pkgs) stdenv;
@@ -18,6 +23,12 @@ in
       programs.zsh.defaultKeymap = "viins";
       programs.zsh.dotDir = ".config/zsh";
       programs.zsh.enableCompletion = false;
+
+      programs.zsh.dirHashes = {
+        docs = "$HOME/Documents";
+        dl = "$HOME/Downloads";
+        repos = "$HOME/Documents/Repositories";
+      };
 
       programs.zsh.history = {
         expireDuplicatesFirst = true;
@@ -62,7 +73,7 @@ in
 
         ''
           autoload -Uz compinit
-          if [[ -n ${ZDOTDIR:-$HOME}/.zcompdump(N.mh+24) ]]; then
+          if [[ -n ${"ZDOTDIR:-$HOME"}/.zcompdump(N.mh+24) ]]; then
               compinit
           else
               compinit -C

@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 let
   inherit (lib) mkEnableOption mkIf mkMerge;
   inherit (pkgs) stdenv;
@@ -15,9 +20,7 @@ in
   config = mkIf cfg.enable (mkMerge [
     { programs.password-store.enable = true; }
 
-    (mkIf config.modules.firefox.enable {
-      programs.browserpass.browsers = [ "firefox" ];
-    })
+    (mkIf config.modules.firefox.enable { programs.browserpass.browsers = [ "firefox" ]; })
 
     (mkIf stdenv.isDarwin {
       home.file.".gnupg/gpg-agent.conf".text = ''
