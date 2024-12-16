@@ -44,7 +44,7 @@
         });
     in
     {
-      homeConfigurations.evgeniya = mkHome "x86_64-linux" "pml" (
+      homeConfigurations.rabelais = mkHome "x86_64-linux" "pml" (
         {
           lib,
           pkgs,
@@ -60,7 +60,7 @@
           };
 
           modules = (lib.recursiveImports ./modules) ++ [
-            ./machines/evgeniya.nix
+            ./machines/rabelais.nix
             {
               home.username = "${username}";
               home.homeDirectory = "/home/${username}";
