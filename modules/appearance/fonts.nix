@@ -5,7 +5,13 @@
   ...
 }:
 let
-  inherit (lib) mkEnableOption mkIf mkMerge mkOption types;
+  inherit (lib)
+    mkEnableOption
+    mkIf
+    mkMerge
+    mkOption
+    types
+    ;
   inherit (pkgs) fetchurl stdenv p7zip;
 
   cfg = config.appearance.fonts;
@@ -68,10 +74,10 @@ in
 {
   options.appearance.fonts = {
     enable = mkEnableOption "Enable fonts configuration";
-    
+
     extraFonts = mkOption {
       type = types.listOf types.package;
-      default = [];
+      default = [ ];
       description = "Additional fonts to install alongside the default ones";
       example = lib.literalExpression ''
         with pkgs; [
@@ -86,11 +92,14 @@ in
     {
       nixpkgs.config.allowUnfree = true;
       fonts.fontconfig.enable = true;
-      home.packages = with pkgs; [
-        iosevka-custom
-        etBook
-        (nerdfonts.override { fonts = [ "NerdFontsSymbolsOnly" ]; })
-      ] ++ cfg.extraFonts;
+      home.packages =
+        with pkgs;
+        [
+          iosevka-custom
+          etBook
+          (nerdfonts.override { fonts = [ "NerdFontsSymbolsOnly" ]; })
+        ]
+        ++ cfg.extraFonts;
     }
 
     (mkIf (!stdenv.isDarwin) {
