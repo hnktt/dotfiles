@@ -5,6 +5,7 @@
     nixpkgs.url = "github:nixos/nixpkgs/nixos-24.05";
     home-manager.url = "github:nix-community/home-manager/release-24.05";
     nur.url = "github:nix-community/NUR";
+    mac-app-util.url = "github:hraban/mac-app-util";
     emacs-overlay.url = "github:nix-community/emacs-overlay";
     neovim-overlay.url = "github:nix-community/neovim-nightly-overlay";
     nix-utils.url = "git+https://codeberg.org/noctologue/nix-utils.git";
@@ -19,6 +20,7 @@
       nur,
       home-manager,
       nix-utils,
+      mac-app-util,
     }@inputs:
     let
       systems = [
@@ -88,6 +90,7 @@
 
           modules = (lib.recursiveImports ./modules) ++ [
             ./machines/montaigne.nix
+            mac-app-util.homeManagerModules.default
             {
               home.username = "${username}";
               home.homeDirectory = "/Users/${username}";

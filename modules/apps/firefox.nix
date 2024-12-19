@@ -7,89 +7,70 @@
   ...
 }:
 let
-  inherit (lib)
-    isDarwin
-    isLinux
-    mkEnableOption
-    mkIf
-    mkMerge
-    optionalAttrs
-    ;
-  inherit (pkgs) callPackage stdenv;
+  inherit (lib) mkEnableOption mkIf mkMerge;
+  inherit (pkgs) fetchurl stdenv undmg;
 
   cfg = config.apps.firefox;
+
+  firefox-darwin = stdenv.mkDerivation rec {
+    pname = "Firefox";
+    version = "133.0.3";
+    buildInputs = [ undmg ];
+    sourceRoot = ".";
+    phases = [
+      "unpackPhase"
+      "installPhase"
+    ];
+    installPhase = ''
+      mkdir -p "$out/Applications"
+      cp -r Firefox.app "$out/Applications/Firefox.app"
+    '';
+    src = fetchurl {
+      name = "Firefox-${version}.dmg";
+      url = "https://download-installer.cdn.mozilla.net/pub/firefox/releases/${version}/mac/en-GB/Firefox%20${version}.dmg";
+      sha256 = "6wlF8YFqtwPB+83lFdv/ytvOeyc8RVof7z3BVXyAjyU=";
+    };
+  };
 in
 {
   options.apps.firefox = {
-    enable = mkEnableOption ''
-      Enable firefox
-    '';
+    enable = mkEnableOption "Enable Firefox";
   };
 
   config = mkIf cfg.enable (mkMerge [
-    { nixpkgs.overlays = [ inputs.nur.overlay ]; }
     {
-      programs.firefox.enable = true;
-      programs.firefox.policies = {
-        EnableTrackingProtection = true;
-        SearchEngines = {
-          Default = "DuckDuckGo";
+      nixpkgs.overlays = [ inputs.nur.overlay ];
+
+      programs.firefox = {
+        enable = true;
+        package = if stdenv.isDarwin then firefox-darwin else pkgs.firefox;
+        policies = {
+          EnableTrackingProtection = true;
+          SearchEngines.Default = "DuckDuckGo";
         };
-      };
-
-      programs.firefox.profiles."${config.home.username}" = {
-        id = 0;
-        isDefault = true;
-        name = "${config.home.username}";
-
-        search.force = true;
-        search = {
-          default = "DuckDuckGo";
+        profiles."${config.home.username}" = {
+          id = 0;
+          isDefault = true;
+          name = "${config.home.username}";
+          search = {
+            force = true;
+            default = "DuckDuckGo";
+          };
+          settings = {
+            "browser.startup.page" = 3;
+            "browser.formfill.enable" = false;
+            "browser.download.useDownloadDir" = false;
+            "services.sync.prefs.sync.browser.formfill.enable" = false;
+            "signon.rememberSignons" = false;
+            "signon.prefillForms" = false;
+          };
+          extensions = with pkgs.nur.repos.rycee.firefox-addons; [
+            ublock-origin
+            search-by-image
+            bitwarden
+          ];
         };
-
-        settings = {
-          "browser.startup.page" = 3;
-          "browser.formfill.enable" = false;
-          "browser.download.useDownloadDir" = false;
-          "services.sync.prefs.sync.browser.formfill.enable" = false;
-          "signon.rememberSignons" = false;
-          "signon.prefillForms" = false;
-        };
-
-        extensions = with pkgs.nur.repos.rycee.firefox-addons; [
-          ublock-origin
-          search-by-image
-          bitwarden
-        ];
       };
     }
-
-    (mkIf (stdenv.isDarwin) { programs.firefox.package = callPackage ../../packages/firefox.nix { }; })
-
-    (mkIf (stdenv.isDarwin && config.apps.pass.enable) {
-      home.activation = {
-        browsepassFirefoxActivation = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-          install -d -o ${config.home.username} -g staff $HOME/Library/Application\ Support/Mozilla/NativeMessagingHosts
-          ln -sf \
-             ${pkgs.browserpass}/lib/mozilla/native-messaging-hosts/com.github.browserpass.native.json \
-             $HOME/Library/Application\ Support/Mozilla/NativeMessagingHosts/com.github.browserpass.native.json
-        '';
-      };
-    })
-
-    # TODO: move to gpg or pass module
-    (mkIf (stdenv.isLinux && config.apps.pass.enable) {
-      services.gpg-agent.extraConfig = ''
-        pinentry-program ${pkgs.pinentry.gnome3}/bin/pinentry-gnome3
-      '';
-
-      programs.firefox.package = pkgs.firefox.override {
-        nativeMessagingHosts = with pkgs; [
-          gnome-browser-connector
-          browserpass
-        ];
-      };
-
-    })
   ]);
 }
