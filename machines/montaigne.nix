@@ -1,7 +1,7 @@
 { ... }:
 
 {
-  appearance.fonts.enable = false;
+  appearance.fonts.enable = true;
 
   apps.emacs.enable = true;
   apps.direnv.enable = true;
