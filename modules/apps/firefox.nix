@@ -59,7 +59,7 @@ in
         extensions = with pkgs.nur.repos.rycee.firefox-addons; [
           ublock-origin
           search-by-image
-          browserpass
+          bitwarden
         ];
       };
     }
