@@ -42,34 +42,6 @@ let
       maintainers = [ ];
     };
   };
-
-  iosevka-custom = pkgs.iosevka.override {
-    set = "custom";
-    privateBuildPlan = {
-      family = "Iosevka";
-      spacing = "fontconfig-mono";
-      serifs = "sans";
-      noCvSs = true;
-      exportGlyphNames = true;
-      noLigation = true;
-      variants.inherits = "ss15";
-      weights.Light = {
-        shape = 300;
-        menu = 300;
-        css = 300;
-      };
-      weights.Regular = {
-        shape = 400;
-        menu = 400;
-        css = 400;
-      };
-      weights.Bold = {
-        shape = 700;
-        menu = 700;
-        css = 700;
-      };
-    };
-  };
 in
 {
   options.appearance.fonts = {
@@ -95,7 +67,8 @@ in
       home.packages =
         with pkgs;
         [
-          iosevka-custom
+          apple-fonts
+          iosevka-comfy.comfy
           etBook
           (nerdfonts.override { fonts = [ "NerdFontsSymbolsOnly" ]; })
         ]
@@ -103,7 +76,6 @@ in
     }
 
     (mkIf (!stdenv.isDarwin) {
-      home.packages = [ apple-fonts ];
       dconf.settings = {
         "org/gnome/desktop/interface" = {
           enable-animations = false;
