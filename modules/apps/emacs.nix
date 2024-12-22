@@ -50,5 +50,12 @@ in
         package = useEmacs emacs-darwin;
       };
     })
+
+    (mkIf stdenv.isLinux {
+      programs.emacs = {
+        enable = true;
+        package = useEmacs emacs29-pgtk;
+      };
+    })
   ]);
 }
